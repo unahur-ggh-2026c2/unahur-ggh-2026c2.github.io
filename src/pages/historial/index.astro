@@ -1,0 +1,215 @@
+---
+// src/pages/historial/index.astro
+import { getCollection } from "astro:content";
+import HeaderUni from "../../components/HeaderUni.astro";
+import UserProfile from "@/components/UserProfile.astro";
+import Footer from "@/components/Footer.astro";
+
+const todasLasAsignacionesViejas = await getCollection("historial");
+
+// [CORRECCIÓN] Filtramos para descartar los registros históricos con active: false
+const asignacionesHistoricasVisibles = todasLasAsignacionesViejas.filter(
+    (asig) => asig.data.active !== false,
+);
+
+// Helper para formatear la fecha de publicación en el listado histórico
+const formatearFecha = (fecha: string | Date) => {
+    if (!fecha) return null;
+    return new Date(fecha).toLocaleDateString("es-AR", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+    });
+};
+---
+
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Historial de Asignaciones - UNAHUR</title>
+        <style>
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
+                background-color: #0b0f19;
+                color: #f1f5f9;
+                margin: 0;
+                padding: 2rem 1rem;
+            }
+            .container {
+                max-width: 850px;
+                margin: 0 auto;
+            }
+            h1 {
+                font-size: 2.4rem;
+                color: #ffffff;
+                margin: 0;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+            }
+            h1 span.naranja {
+                color: #ff9e1b;
+            }
+            h2 {
+                font-size: 1rem;
+                color: #94a3b8;
+                margin: 0;
+                font-weight: 400;
+                opacity: 0.9;
+            }
+
+            .panel-controls {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .btn-active-action {
+                background: rgba(0, 155, 195, 0.07);
+                color: #009bc3;
+                border: 1px solid rgba(0, 155, 195, 0.2);
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                transition: all 0.2s ease;
+            }
+
+            .btn-active-action:hover {
+                background: #009bc3;
+                color: #0b0f19;
+                border-color: #009bc3;
+            }
+
+            /* --- GRILLA DE MATERIAS --- */
+            .subjects-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+                margin-top: 1rem;
+            }
+            .subject-card {
+                background: #111726;
+                padding: 1.75rem;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                color: #fff;
+                text-decoration: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: all 0.2s ease;
+            }
+            .subject-card:hover {
+                border-color: #ff9e1b;
+                transform: translateY(-2px);
+            }
+
+            .card-body {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+            .card-title {
+                font-weight: 700;
+                font-size: 1.05rem;
+            }
+
+            /* Estilo sutil para la fecha de publicación en el Historial */
+            .card-date {
+                font-size: 0.75rem;
+                color: #64748b;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.02em;
+                border-top: 1px solid rgba(255, 255, 255, 0.03);
+                padding-top: 0.5rem;
+                margin-top: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1.5rem;"
+            >
+                <div>
+                    <h1>
+                        Asignaciones <span class="naranja">Históricas</span>
+                    </h1>
+                    <h2>Trabajos prácticos y entregas de ciclos anteriores.</h2>
+                </div>
+                <HeaderUni />
+            </header>
+
+            <UserProfile />
+
+            <main>
+                <div class="panel-controls">
+                    <a href="/" class="btn-active-action"> ← Ver Activas </a>
+                </div>
+
+                <div class="subjects-grid">
+                    {
+                        // [CORRECCIÓN] Validamos sobre el listado filtrado 'asignacionesHistoricasVisibles'
+                        asignacionesHistoricasVisibles.length === 0 ? (
+                            <p style="color: #64748b; grid-column: 1/-1;">
+                                No hay asignaciones en el historial todavía.
+                            </p>
+                        ) : (
+                            asignacionesHistoricasVisibles.map((asig) => {
+                                const fechaPub = formatearFecha(
+                                    asig.data.fechaPublicacion,
+                                );
+
+                                return (
+                                    <a
+                                        href={`/historial/${asig.slug}`}
+                                        class="subject-card"
+                                    >
+                                        <div class="card-body">
+                                            <span class="card-title">
+                                                {asig.data.title}
+                                            </span>
+                                            <span style="color: #ff9e1b;">
+                                                →
+                                            </span>
+                                        </div>
+                                        {/* Renderizamos la fecha si el markdown histórico dispone de ella */}
+                                        {fechaPub && (
+                                            <span class="card-date">
+                                                Publicado: {fechaPub}
+                                            </span>
+                                        )}
+                                    </a>
+                                );
+                            })
+                        )
+                    }
+                </div>
+            </main>
+        </div>
+
+        <script is:inline>
+            document.addEventListener("DOMContentLoaded", () => {
+                const savedUser = localStorage.getItem("gh_username");
+
+                // Seguridad básica: si entra directo sin loguearse, vuelve al home.
+                if (!savedUser) {
+                    window.location.href = "/";
+                }
+            });
+        </script>
+        <Footer />
+    </body>
+</html>

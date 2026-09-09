@@ -1,0 +1,69 @@
+---
+// src/components/HeaderUni.astro
+const { pageTitle } = Astro.props;
+---
+
+<header class="navbar-uni">
+	<div class="title-section">
+		<slot />
+	</div>
+
+	<div class="logo-container">
+		<img
+			src="/UNAHUR-LOGO.png"
+			alt="Universidad Nacional de Hurlingham"
+			class="logo-uni"
+			onerror="this.style.display='none'"
+		/>
+	</div>
+</header>
+
+<style>
+	.navbar-uni {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		/* border-bottom: 1px solid rgba(255, 255, 255, 0.05); */
+		padding-bottom: 2rem;
+		margin-bottom: 2rem; /* Bajado para dejar espacio a la barra horizontal abajo */
+		gap: 2rem;
+	}
+
+	.title-section {
+		flex: 1;
+	}
+
+	.logo-container {
+		background: rgba(255, 255, 255, 0.02);
+		border: 1px solid rgba(0, 155, 195, 0.15);
+		padding: 0.75rem;
+		border-radius: 12px;
+		backdrop-filter: blur(8px);
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+		width: 120px;
+		flex-shrink: 0;
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.logo-uni {
+		width: 100%;
+		height: auto;
+		max-width: 95px;
+		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.05));
+	}
+
+	@media (max-width: 600px) {
+		.navbar-uni {
+			flex-direction: column-reverse;
+			text-align: center;
+			gap: 1.5rem;
+		}
+		.logo-container {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+</style>

@@ -1,0 +1,86 @@
+<div id="totp-modal" class="modal-overlay hidden">
+	<div id="totp-modal-content" class="modal-box">
+		<h3>Verificación de Seguridad</h3>
+		<p>Ingresá el código numérico de 6 dígitos de tu autenticador:</p>
+		<input type="text" id="totp-input" maxlength="6" placeholder="000000" inputmode="numeric" pattern="[0-9]*" />
+		<div id="totp-error-box" class="error-msg hidden"><span id="totp-error-text"></span></div>
+		<div class="modal-actions">
+			<button id="totp-cancel" class="m-btn btn-sec">Cancelar</button>
+			<button id="totp-submit" class="m-btn btn-pri">Verificar</button>
+		</div>
+	</div>
+</div>
+
+<div id="team-modal" class="modal-overlay hidden">
+	<div class="modal-box">
+		<h3>Selección de Equipo</h3>
+		<p>Escribí el nombre de tu grupo. Si ya existe te unirás; si no, se creará uno nuevo:</p>
+		<input type="text" id="combobox-input" placeholder="Nombre del grupo..." autocomplete="off" />
+		<ul id="combobox-list" class="suggest-list"></ul>
+		<div class="modal-actions">
+			<button id="team-close-btn" class="m-btn btn-sec">Cerrar</button>
+			<button id="team-action-btn" class="m-btn btn-pri" disabled>Escribí un nombre</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	.modal-overlay { 
+		position: fixed; 
+		inset: 0; 
+		background: rgba(4, 6, 12, 0.8); 
+		backdrop-filter: blur(8px); 
+		display: flex; 
+		align-items: center; 
+		justify-content: center; 
+		z-index: 9999; 
+	}
+	.modal-overlay.hidden { display: none !important; }
+	.modal-box { 
+		background: #111726; 
+		border: 1px solid rgba(255,255,255,0.08);
+		padding: 2.25rem; 
+		border-radius: 20px; 
+		width: 90%; 
+		max-width: 440px; 
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+	}
+	.modal-box h3 { margin-top: 0; color: #ffffff; font-size: 1.4rem; font-weight: 700; }
+	.modal-box p { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; }
+	.modal-box input { 
+		width: 100%; 
+		padding: 12px 16px; 
+		box-sizing: border-box; 
+		background: #070a12;
+		color: white;
+		border: 2px solid #1e293b; 
+		border-radius: 10px; 
+		font-size: 1.1rem; 
+		margin: 1rem 0; 
+		outline: none;
+		text-align: center;
+		letter-spacing: 0.1em;
+	}
+	.modal-box input:focus { border-color: #009bc3; }
+	.modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 1.5rem; }
+	.m-btn { padding: 10px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s ease; }
+	
+	/* El botón primario del modal toma el Naranja ITI */
+	.btn-pri { background: #f39200; color: #000000; }
+	.btn-pri:not(:disabled):hover { background: #ffaa2b; transform: translateY(-1px); }
+	.btn-pri:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
+	
+	.btn-sec { background: #1e293b; color: #94a3b8; }
+	.btn-sec:hover { background: #334155; color: white; }
+	
+	.error-msg { color: #ef4444; font-size: 0.875rem; margin-bottom: 0.5rem; font-weight: 500; }
+	
+	.suggest-list { list-style: none; padding: 0; margin: 0; max-height: 150px; overflow-y: auto; background: #070a12; border: 1px solid #1e293b; border-radius: 8px; display: none; }
+	.suggest-list.open { display: block; }
+	
+	:global(.combobox-option) { padding: 10px 14px; cursor: pointer; color: #e2e8f0; }
+	:global(.combobox-option:hover), :global(.combobox-option.active) { background: #1e293b; color: #009bc3; }
+	
+	@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+	:global(.shake-anim) { animation: shake 0.4s ease-in-out; }
+</style>

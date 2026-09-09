@@ -1,0 +1,71 @@
+<div class="user-box">
+	<div class="input-header">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="18"
+			height="18"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle
+				cx="12"
+				cy="7"
+				r="4"></circle></svg
+		>
+		<label for="gh-user">Tu usuario de GitHub</label>
+	</div>
+	<input
+		type="text"
+		id="gh-user"
+		class="github-user-input"
+		placeholder="Ej: pablomarmol"
+		autocomplete="off"
+		spellcheck="false"
+	/>
+</div>
+
+<style>
+	.user-box {
+		background: #111726;
+		padding: 1.5rem;
+		border-radius: 16px;
+		margin-bottom: 2.5rem;
+		max-width: 420px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+	}
+	.input-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: #94a3b8;
+	}
+	.input-header svg {
+		color: #009bc3; /* Celeste */
+	}
+	label {
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+	input {
+		padding: 12px 16px;
+		background: #070a12;
+		color: #ffffff;
+		border-radius: 10px;
+		border: 2px solid #1e293b;
+		font-size: 1rem;
+		outline: none;
+		transition: all 0.2s ease;
+	}
+	input:focus {
+		border-color: #009bc3;
+		background: #0b111e;
+		box-shadow: 0 0 0 4px rgba(0, 155, 195, 0.15);
+	}
+</style>

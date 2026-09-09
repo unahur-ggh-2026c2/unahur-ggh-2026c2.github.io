@@ -1,0 +1,72 @@
+---
+// src/components/CardAsignacion.astro
+const { title, description, slug } = Astro.props;
+---
+
+<div class="card">
+	<h3>{title}</h3>
+	<p>{description || "Sin descripción provista para esta semana."}</p>
+	<a href={`/${slug}`}>
+		<span>Ver ejercicios</span>
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+	</a>
+</div>
+
+<style>
+	.card { 
+		background: #111726; 
+		border: 1px solid rgba(0, 155, 195, 0.25); /* Sutil Celeste UNAHUR */
+		border-radius: 16px; 
+		padding: 1.75rem; 
+		display: flex; 
+		flex-direction: column; 
+		justify-content: space-between; 
+		transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+		box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+	}
+	.card:hover {
+		transform: translateY(-4px);
+		border-color: #70b043; /* Cambia a Verde UNAHUR en Hover */
+		box-shadow: 0 12px 30px -10px rgba(112, 176, 67, 0.15);
+	}
+	h3 { 
+		margin: 0 0 0.75rem 0; 
+		color: #ffffff; 
+		font-size: 1.3rem;
+		font-weight: 700;
+		line-height: 1.3;
+	}
+	p { 
+		color: #94a3b8; 
+		font-size: 0.95rem; 
+		line-height: 1.6;
+		margin: 0 0 1.5rem 0;
+		flex-grow: 1;
+	}
+	a { 
+		display: flex; 
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		background: #1e293b; 
+		color: #ffffff; 
+		text-decoration: none; 
+		padding: 12px; 
+		border-radius: 10px; 
+		font-weight: 600; 
+		font-size: 0.95rem;
+		border: 1px solid rgba(255,255,255,0.05);
+		transition: all 0.2s ease;
+	}
+	a:hover { 
+		background: #009bc3; /* Explota en Celeste UNAHUR */
+		border-color: #009bc3;
+		box-shadow: 0 4px 12px rgba(0, 155, 195, 0.3);
+	}
+	a svg {
+		transition: transform 0.2s ease;
+	}
+	a:hover svg {
+		transform: translateX(4px);
+	}
+</style>

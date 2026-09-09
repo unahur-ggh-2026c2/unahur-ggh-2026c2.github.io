@@ -1,0 +1,81 @@
+---
+// src/components/UserProfile.astro
+---
+
+<div id="auth-user-bar" style="display: none;" class="user-profile-bar">
+    <div class="user-info">
+        <img id="display-avatar" src="" alt="Avatar" class="user-avatar" />
+        <span style="color: #1bff5f;">
+            Conectado como <strong id="display-username" style="color: #00a3e0;"
+            ></strong>
+        </span>
+    </div>
+    <button type="button" id="btn-logout-gh" class="btn-logout">
+        Cerrar sesión
+    </button>
+</div>
+
+<style>
+    .user-profile-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #111726;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid #70b043;
+    }
+    .btn-logout {
+        background: transparent;
+        color: #94a3b8;
+        border: 1px solid #1e293b;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+    .btn-logout:hover {
+        color: #f43f5e;
+        border-color: rgba(244, 63, 94, 0.2);
+    }
+</style>
+
+<script is:inline>
+    // Lógica auto-contenida para actualizar la UI del perfil si existe sesión
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedUser = localStorage.getItem("gh_username");
+        const authUserBar = document.getElementById("auth-user-bar");
+        const displayUsername = document.getElementById("display-username");
+        const displayAvatar = document.getElementById("display-avatar");
+        const btnLogout = document.getElementById("btn-logout-gh");
+
+        if (savedUser && authUserBar) {
+            if (displayUsername) displayUsername.textContent = `@${savedUser}`;
+            if (displayAvatar)
+                displayAvatar.src = `https://github.com/${savedUser}.png`;
+            authUserBar.style.display = "flex";
+        }
+
+        btnLogout?.addEventListener("click", () => {
+            localStorage.removeItem("gh_username");
+            localStorage.removeItem("gh_token");
+            window.location.href = "/";
+        });
+    });
+</script>

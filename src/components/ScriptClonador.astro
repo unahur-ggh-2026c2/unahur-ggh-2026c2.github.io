@@ -1,0 +1,207 @@
+<script>
+	const WORKER_URL = 'https://worker-objetos.objetos-unahur.workers.dev';
+
+	if (!window.__githubHandlerAttached) {
+		window.__githubHandlerAttached = true;
+
+		const PROCESSING_TEXT = 'Procesando...';
+		const SUCCESS_TEXT = '✓ ¡Listo! Abriendo...';
+		const ERROR_TEXT = '✗ Error, intentá de nuevo';
+		const ACCEPTED_TEXT = 'Aceptado. Ir al repo →';
+
+		// 👇 MODIFICADO: Ahora obtenemos el usuario directamente del login automático
+		const obtenerUsuarioLogueado = () => localStorage.getItem('gh_username');
+
+		const ACCEPTED_KEY = 'acceptedAssignments';
+		const assignments = {
+			get: () => { try { return JSON.parse(localStorage.getItem(ACCEPTED_KEY)) || [] } catch { return [] } },
+			mark: (prefix, type) => {
+				const list = assignments.get();
+				if (!list.some(a => a.prefix === prefix && a.type === type)) {
+					list.push({ prefix, type });
+					localStorage.setItem(ACCEPTED_KEY, JSON.stringify(list));
+				}
+			},
+			has: (prefix, type) => assignments.get().some(a => a.prefix === prefix && a.type === type)
+		};
+
+		const updateAcceptedButtons = () => {
+			document.querySelectorAll('.aceptar-invitacion').forEach((btn) => {
+				const prefix = btn.getAttribute('data-prefix');
+				const type = btn.getAttribute('data-type') ?? 'individual';
+				if (assignments.has(prefix, type)) {
+					btn.innerHTML = ACCEPTED_TEXT;
+					btn.classList.add('btn-accepted');
+				}
+			});
+		};
+
+		// Eventos de ciclo de vida de Astro
+		document.addEventListener('DOMContentLoaded', () => { updateAcceptedButtons(); });
+		document.addEventListener('astro:page-load', () => { updateAcceptedButtons(); });
+
+		const hideTotpModal = () => {
+			document.getElementById('totp-modal')?.classList.add('hidden');
+			document.getElementById('totp-modal-content')?.classList.remove('shake-anim');
+		};
+
+		const askTotpCode = (btn, errorMsg = null) => {
+			if (btn.getAttribute('data-require-totp') !== 'true') return Promise.resolve(null);
+			return new Promise((resolve) => {
+				const modal = document.getElementById('totp-modal');
+				const content = document.getElementById('totp-modal-content');
+				const input = document.getElementById('totp-input');
+				const errorBox = document.getElementById('totp-error-box');
+				const errorTxt = document.getElementById('totp-error-text');
+				const submitBtn = document.getElementById('totp-submit');
+				const cancelBtn = document.getElementById('totp-cancel');
+
+				input.value = ''; input.disabled = false; submitBtn.disabled = false; cancelBtn.disabled = false;
+				submitBtn.textContent = 'Verificar'; errorBox.classList.add('hidden'); content.classList.remove('shake-anim');
+
+				if (errorMsg) {
+					errorTxt.textContent = errorMsg; errorBox.classList.remove('hidden');
+					content.classList.add('shake-anim');
+				}
+
+				let resolved = false;
+				const cleanup = () => { if (resolved) return; resolved = true; };
+
+				const intentarSubmit = () => {
+					const val = input.value.trim();
+					if (!/^\d{6}$/.test(val)) {
+						errorTxt.textContent = 'El código es incorrecto.'; errorBox.classList.remove('hidden');
+						content.classList.add('shake-anim'); return;
+					}
+					input.disabled = true; submitBtn.disabled = true; submitBtn.textContent = 'Verificando...';
+					cleanup(); resolve(val);
+				};
+
+				submitBtn.onclick = intentarSubmit;
+				cancelBtn.onclick = () => { hideTotpModal(); cleanup(); resolve(null); };
+				modal.classList.remove('hidden');
+				setTimeout(() => input.focus(), 50);
+			});
+		};
+
+		const openTeamModal = (teams) => {
+			return new Promise((resolve) => {
+				const modal = document.getElementById('team-modal');
+				const input = document.getElementById('combobox-input');
+				const list = document.getElementById('combobox-list');
+				const actionBtn = document.getElementById('team-action-btn');
+				const closeBtn = document.getElementById('team-close-btn');
+
+				input.value = ''; list.innerHTML = ''; actionBtn.disabled = true; modal.classList.remove('hidden');
+
+				actionBtn.onclick = () => {
+					const val = input.value.trim(); if (!val) return;
+					const exists = teams.some(t => t.teamName.toLowerCase() === val.toLowerCase());
+					modal.classList.add('hidden');
+					resolve({ teamName: val, mode: exists ? 'join' : 'create' });
+				};
+
+				closeBtn.onclick = () => { modal.classList.add('hidden'); resolve(null); };
+				input.oninput = () => {
+					const val = input.value.trim();
+					actionBtn.disabled = !val;
+					actionBtn.textContent = val ? (teams.some(t => t.teamName.toLowerCase() === val.toLowerCase()) ? 'Unirse al equipo' : `Crear "${val}"`) : 'Escribí un nombre';
+				};
+			});
+		};
+
+		const fetchConReintento = async (btn, body) => {
+			let codigoActual = body.totpCode
+
+			while (true) {
+				console.log("👉 POLTERGEIST DETECTED - BODY ENVIADO:", { ...body, totpCode: codigoActual });
+
+				const res = await fetch(WORKER_URL, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						...body,
+						totpCode: codigoActual,
+					}),
+				});
+				let data = null;
+				try { data = await res.json(); } catch {}
+
+				if (res.ok && !data?.error) return data;
+
+				const errStr = String(data?.error || '').toLowerCase();
+				if (errStr.includes('totp') || errStr.includes('inválido') || errStr.includes('incorrecto') || errStr.includes('expired')) {
+					const nuevoCodigo = await askTotpCode(btn, 'Código incorrecto o expirado.');
+					if (nuevoCodigo === null) throw new Error('CANCELLED');
+					codigoActual = nuevoCodigo;
+					continue;
+				}
+				throw new Error(data?.error || 'Error al procesar');
+			}
+		};
+
+		document.addEventListener('click', async (e) => {
+			const btn = e.target.closest('.aceptar-invitacion');
+			if (!btn) return;
+			e.preventDefault();
+
+			// 👇 MODIFICADO: Obtenemos el usuario validado de la sesión automática
+			let usuario = obtenerUsuarioLogueado();
+			if (!usuario) { alert('No se detectó una sesión activa de GitHub. Por favor, recargá la página.'); return; }
+
+			const totpCode = await askTotpCode(btn);
+			if (totpCode === null && btn.getAttribute('data-require-totp') === 'true') return;
+
+			const originalHTML = btn.innerHTML;
+			btn.disabled = true; btn.textContent = PROCESSING_TEXT;
+
+			const type = btn.getAttribute('data-type') ?? 'individual';
+			const prefix = btn.getAttribute('data-prefix');
+			const destOrg = btn.getAttribute('data-dest-org');
+
+			try {
+				if (type === 'individual') {
+					const body = {
+						type, username: usuario, totpCode,
+						template: btn.getAttribute('data-template'),
+						templateOrg: btn.getAttribute('data-template-org'),
+						destOrg, prefix,
+						isPrivate: btn.getAttribute('data-private') === 'true'
+					};
+					const data = await fetchConReintento(btn, body);
+					hideTotpModal();
+					assignments.mark(prefix, type);
+					btn.textContent = SUCCESS_TEXT;
+					setTimeout(() => { window.open(`${data.repoUrl}/invitations`, '_blank'); updateAcceptedButtons(); btn.disabled = false; }, 1500);
+				} else {
+					const baseBody = { type, username: usuario, totpCode };
+					await fetchConReintento(btn, { ...baseBody, type: 'individual', template: '__totp_check__', templateOrg: '__totp_check__', destOrg: '__totp_check__', prefix: '__totp_check__' }).catch(err => { if(err.message === 'CANCELLED') throw err; });
+					hideTotpModal();
+
+					const listRes = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...baseBody, type: 'group', action: 'list-teams', destOrg }) });
+					const listData = await listRes.json();
+					const decision = await openTeamModal(listData.teams || []);
+					if (!decision) { btn.disabled = false; btn.innerHTML = originalHTML; return; }
+
+					const body = {
+						...baseBody, type: 'group', action: 'accept', prefix, destOrg,
+						templateOrg: btn.getAttribute('data-template-org'),
+						templateRepo: btn.getAttribute('data-template'),
+						isPrivate: btn.getAttribute('data-private') === 'true',
+						mode: decision.mode, teamName: decision.teamName
+					};
+					const acceptData = await fetchConReintento(btn, body);
+					assignments.mark(prefix, type);
+					btn.textContent = SUCCESS_TEXT;
+					setTimeout(() => { window.open(acceptData.needsInvitation ? `${acceptData.repoUrl}/invitations` : acceptData.repoUrl, '_blank'); updateAcceptedButtons(); btn.disabled = false; }, 1500);
+				}
+			} catch (err) {
+				hideTotpModal();
+				if (err.message !== 'CANCELLED') { btn.textContent = ERROR_TEXT; setTimeout(() => { btn.disabled = false; btn.innerHTML = originalHTML; }, 2000); }
+				else { btn.disabled = false; btn.innerHTML = originalHTML; }
+			}
+		});
+	}
+</script>
