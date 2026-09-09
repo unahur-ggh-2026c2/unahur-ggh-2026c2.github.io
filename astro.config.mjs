@@ -10,7 +10,7 @@ export default defineConfig({
   image: {
     service: passthroughImageService()
   },
-  site: 'https://unahur-materias.github.io', // <-- Cambiala después por tu URL de Render si querés
+  site: 'https://unahur-ggh-2026c2.github.io', // <-- Cambiala después por tu URL de Render si querés
   base: '/',
   compressHTML: false,
   integrations: [
