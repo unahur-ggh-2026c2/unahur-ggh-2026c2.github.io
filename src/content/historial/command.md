@@ -2,7 +2,7 @@
 title: Patrones Command y Observer
 description: Ejercicio de practica para el patrón Command
 fechaPublicacion: 2026-06-15
-active: true
+active: false
 
 ejercicios:
   - name: ☕ Máquina de Café Inteligente
