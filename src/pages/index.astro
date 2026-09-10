@@ -9,7 +9,7 @@ const todasLasAsignaciones = await getCollection("asignaciones");
 
 // [CORRECCIÓN] Filtramos para que SOLO pasen las asignaciones que no tengan active: false
 const asignacionesVisibles = todasLasAsignaciones.filter(
-  (asig) => asig.data.active !== false,
+  (asig: { data: { active: boolean; }; }) => asig.data.active !== false,
 );
 
 // Helper para formatear la fecha de publicación en el listado principal
@@ -232,7 +232,7 @@ const formatearFecha = (fecha: string | Date) => {
       <header class="header-container">
         <div class="header-title-block">
           <h1>
-            Asignaciones <span class="celeste">Disponibles</span>
+            Taller de <span class="celeste">Git y GitHub</span>
           </h1>
           <h2>Entorno de gestión de repositorios y entregas de código.</h2>
           <h2>Instituto de Tecnología e Ingeniería - UNaHur</h2>
@@ -312,7 +312,7 @@ const formatearFecha = (fecha: string | Date) => {
           <div class="subjects-grid">
             {
               // [CORRECCIÓN] Usamos el array filtrado 'asignacionesVisibles'
-              asignacionesVisibles.map((asig) => {
+              asignacionesVisibles.map((asig: { data: { fechaPublicacion: string | Date; title: unknown; }; slug: any; }) => {
                 const fechaPub = formatearFecha(asig.data.fechaPublicacion);
 
                 return (
