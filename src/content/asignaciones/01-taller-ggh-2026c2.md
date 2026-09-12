@@ -1,7 +1,7 @@
 ---
 title: "EF: Taller de GIT y GITHUB - ACTIVIDADES CON CREDITOS 2026"
 description: "Taller virtual de control de versiones con Git y GitHub"
-fechaPublicacion: 2026-09-15
+fechaPublicacion: 2026-09-12
 active: true
 
 ejercicios:

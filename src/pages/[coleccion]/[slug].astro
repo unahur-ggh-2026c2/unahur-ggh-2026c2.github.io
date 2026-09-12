@@ -1,4 +1,459 @@
 ---
+import { getCollection, render } from "astro:content";
+import ModalesClonador from "../../components/ModalesClonador.astro";
+import ScriptClonador from "../../components/ScriptClonador.astro";
+import HeaderUni from "../../components/HeaderUni.astro";
+import UserProfile from "@/components/UserProfile.astro";
+import Footer from "@/components/Footer.astro";
+
+export async function getStaticPaths() {
+  const activas = await getCollection("asignaciones");
+  const pasadas = await getCollection("historial");
+
+  const pathsActivas = activas.map((asig) => ({
+    params: { coleccion: "asignaciones", slug: asig.slug },
+    props: { asig },
+  }));
+
+  const pathsPasadas = pasadas.map((asig) => ({
+    params: { coleccion: "historial", slug: asig.slug },
+    props: { asig },
+  }));
+
+  return [...pathsActivas, ...pathsPasadas];
+}
+
+const { asig } = Astro.props;
+const { title, ejercicios, recursos } = asig.data;
+
+// Renderizamos el cuerpo Markdown si tiene contenido escrito debajo del Frontmatter
+const { Content } = await render(asig);
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} - UNAHUR</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background-color: #0b0f19;
+        color: #f1f5f9;
+        margin: 0;
+        padding: 2rem 1rem;
+      }
+      .container {
+        max-width: 850px;
+        margin: 0 auto;
+      }
+
+      .nav-box {
+        margin: 1rem 0 2rem 0;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #009bc3;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+        font-size: 0.9rem;
+      }
+      .back-link:hover {
+        color: #70b043;
+      }
+
+      h1 {
+        font-size: 2rem;
+        color: #ffffff;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-align: left;
+      }
+
+      /* Estilos para el contenido Markdown renderizado */
+      .markdown-body {
+        background: #111726;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 2.25rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+      }
+      .markdown-body h1,
+      .markdown-body h2,
+      .markdown-body h3 {
+        color: #ffffff;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .markdown-body h1:first-child,
+      .markdown-body h2:first-child,
+      .markdown-body h3:first-child {
+        margin-top: 0;
+      }
+      .markdown-body p,
+      .markdown-body li {
+        color: #94a3b8;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      .markdown-body strong {
+        color: #f1f5f9;
+      }
+      .markdown-body a {
+        color: #009bc3;
+      }
+      .markdown-body hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin: 1.75rem 0;
+      }
+      .markdown-body img {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+
+      .exercises-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .ex-card {
+        background: #111726;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 2.25rem;
+        border-radius: 16px;
+        position: relative;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .ex-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        background: #70b043;
+      }
+
+      .badge-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+      .badge-group {
+        background: rgba(0, 155, 195, 0.15);
+        color: #009bc3;
+        border: 1px solid rgba(0, 155, 195, 0.3);
+      }
+      .badge-required {
+        background: rgba(243, 146, 0, 0.15);
+        color: #f39200;
+        border: 1px solid rgba(243, 146, 0, 0.3);
+      }
+
+      h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.4rem;
+        color: #ffffff;
+        font-weight: 700;
+      }
+
+      .comment-box {
+        background: #070a12;
+        border-left: 3px solid #1e293b;
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 1rem 0 1.75rem 0;
+      }
+      .comment-box p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+      }
+
+      .btn-accept {
+        background: #f39200;
+        color: #04060a;
+        font-weight: 700;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(243, 146, 0, 0.15);
+      }
+      .btn-accept:not(:disabled):hover {
+        background: #ffaa2b;
+        box-shadow: 0 6px 20px rgba(243, 146, 0, 0.3);
+        transform: translateY(-1px);
+      }
+      .btn-accept:disabled {
+        background: #1e293b;
+        color: #64748b;
+        box-shadow: none;
+        cursor: not-allowed;
+      }
+
+      .btn-consigna {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: #ffffff;
+        border: 2px solid #1e293b;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+      .btn-consigna:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: #cbd5e1;
+      }
+
+      /* Estilos para el bloque de Recursos */
+      .resources-container {
+        margin-top: 3rem;
+      }
+      .resources-title {
+        font-size: 1.25rem;
+        color: #ffffff;
+        margin-bottom: 1.25rem;
+        font-weight: 700;
+      }
+      .resources-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .resource-card {
+        background: #111726;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1.25rem 1.75rem;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .resource-card:hover {
+        border-color: rgba(0, 155, 195, 0.4);
+        transform: translateY(-1px);
+      }
+      .resource-info h4 {
+        margin: 0 0 0.3rem 0;
+        color: #ffffff;
+        font-size: 1.1rem;
+      }
+      .resource-info p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <HeaderUni>
+        <h1>{title}</h1>
+      </HeaderUni>
+
+      <UserProfile />
+
+      <div class="nav-box">
+        <a href="/" class="back-link">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><line x1="19" y1="12" x2="5" y2="12"></line><polyline
+              points="12 19 5 12 12 5"></polyline></svg
+          >
+          Volver al panel principal
+        </a>
+      </div>
+
+      <!-- 1. Texto / HTML escrito debajo del Frontmatter del Markdown -->
+      {
+        asig.body && asig.body.trim().length > 0 && (
+          <section class="markdown-body">
+            <Content />
+          </section>
+        )
+      }
+
+      <!-- 2. Bloque de ejercicios / asignaciones -->
+      <main class="exercises-stack">
+        {
+          ejercicios &&
+            ejercicios.map((ej: any) => {
+              const partes = ej.urlTemplate
+                ? ej.urlTemplate.replace("https://github.com/", "").split("/")
+                : [];
+              const templateOrg = partes[0] ?? "";
+              const template = (partes[1] ?? "").split("?")[0] ?? "";
+              const repoUrl = ej.urlTemplate
+                ? ej.urlTemplate.replace("https://github.com/", "")
+                : "";
+
+              const destOrg = ej.destOrg || templateOrg;
+              const prefix = ej.prefix || template;
+              const isPrivate =
+                ej.obligatorio || ej.isPrivate ? "true" : "false";
+
+              return (
+                <div class="ex-card">
+                  <div class="badge-row">
+                    {ej.obligatorio && (
+                      <span class="badge badge-required">Obligatorio</span>
+                    )}
+                    {ej.type === "group" && (
+                      <span class="badge badge-group">Grupal</span>
+                    )}
+                  </div>
+
+                  <h3>{ej.name}</h3>
+
+                  {ej.comentarios &&
+                    ej.comentarios.map((c: any) => (
+                      <div class="comment-box">
+                        <p>{c.name}</p>
+                      </div>
+                    ))}
+
+                  <div class="actions-grid">
+                    <button
+                      type="button"
+                      class="btn-accept aceptar-invitacion"
+                      disabled={ej.asignacion === false}
+                      data-template={template}
+                      data-template-org={templateOrg}
+                      data-template-repo={template}
+                      data-dest-org={destOrg}
+                      data-prefix={prefix}
+                      data-private={isPrivate}
+                      data-type={ej.type || "individual"}
+                      data-require-totp={ej.requireTOTP ? "true" : "false"}
+                    >
+                      {ej.asignacion === false
+                        ? "Asignación no disponible"
+                        : "Aceptar asignación"}
+                    </button>
+
+                    <a
+                      href={`https://github.com/${repoUrl}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="btn-consigna"
+                    >
+                      Ver Consigna
+                    </a>
+                  </div>
+                </div>
+              );
+            })
+        }
+      </main>
+
+      <!-- 3. Bloque de Recursos (se ubica debajo de las asignaciones) -->
+      {
+        recursos && recursos.length > 0 && (
+          <section class="resources-container">
+            <h2 class="resources-title">Recursos Adicionales</h2>
+            <div class="resources-stack">
+              {recursos.map((rec: any) => (
+                <a
+                  href={rec.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="resource-card"
+                >
+                  <div class="resource-info">
+                    <h4>{rec.title || rec.titulo}</h4>
+                    {rec.description && <p>{rec.description}</p>}
+                  </div>
+                  {rec.badge && (
+                    <span class="badge badge-group">{rec.badge}</span>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+
+    <ModalesClonador />
+    <ScriptClonador />
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", () => {
+        const authUserBar = document.getElementById("auth-user-bar");
+        const displayUsername = document.getElementById("display-username");
+        const displayAvatar = document.getElementById("display-avatar");
+        const btnLogout = document.getElementById("btn-logout-gh");
+
+        const savedUser = localStorage.getItem("gh_username");
+
+        if (!savedUser) {
+          window.location.href = "/";
+          return;
+        }
+
+        if (displayUsername) displayUsername.textContent = `@${savedUser}`;
+        if (displayAvatar)
+          displayAvatar.src = `https://github.com/${savedUser}.png`;
+        if (authUserBar) authUserBar.style.display = "flex";
+
+        btnLogout?.addEventListener("click", () => {
+          localStorage.removeItem("gh_username");
+          localStorage.removeItem("gh_token");
+          window.location.href = "/";
+        });
+      });
+    </script>
+    <Footer />
+  </body>
+</html>
+
+<!-- ---
 // src/pages/[coleccion]/[slug].astro
 import { getCollection } from "astro:content";
 import ModalesClonador from "../../components/ModalesClonador.astro";
@@ -8,24 +463,24 @@ import UserProfile from "@/components/UserProfile.astro";
 import Footer from "@/components/Footer.astro";
 
 export async function getStaticPaths() {
-	// 1. Buscamos en las dos carpetas de contenido físicas
-	const activas = await getCollection("asignaciones");
-	const pasadas = await getCollection("historial");
+  // 1. Buscamos en las dos carpetas de contenido físicas
+  const activas = await getCollection("asignaciones");
+  const pasadas = await getCollection("historial");
 
-	// 2. Mapeamos las activas -> URL: /asignaciones/tu-slug
-	const pathsActivas = activas.map((asig) => ({
-		params: { coleccion: "asignaciones", slug: asig.slug },
-		props: { asig },
-	}));
+  // 2. Mapeamos las activas -> URL: /asignaciones/tu-slug
+  const pathsActivas = activas.map((asig) => ({
+    params: { coleccion: "asignaciones", slug: asig.slug },
+    props: { asig },
+  }));
 
-	// 3. Mapeamos las viejas -> URL: /historial/tu-slug
-	const pathsPasadas = pasadas.map((asig) => ({
-		params: { coleccion: "historial", slug: asig.slug },
-		props: { asig },
-	}));
+  // 3. Mapeamos las viejas -> URL: /historial/tu-slug
+  const pathsPasadas = pasadas.map((asig) => ({
+    params: { coleccion: "historial", slug: asig.slug },
+    props: { asig },
+  }));
 
-	// Combinamos ambas colecciones en el mismo ruteador
-	return [...pathsActivas, ...pathsPasadas];
+  // Combinamos ambas colecciones en el mismo ruteador
+  return [...pathsActivas, ...pathsPasadas];
 }
 
 const { asig } = Astro.props;
@@ -33,357 +488,342 @@ const { title, ejercicios } = asig.data;
 ---
 
 <html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>{title} - UNAHUR</title>
-		<style>
-			body {
-				font-family:
-					system-ui,
-					-apple-system,
-					sans-serif;
-				background-color: #0b0f19;
-				color: #f1f5f9;
-				margin: 0;
-				padding: 2rem 1rem;
-			}
-			.container {
-				max-width: 850px;
-				margin: 0 auto;
-			}
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} - UNAHUR</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background-color: #0b0f19;
+        color: #f1f5f9;
+        margin: 0;
+        padding: 2rem 1rem;
+      }
+      .container {
+        max-width: 850px;
+        margin: 0 auto;
+      }
 
-			/* Contenedor del link de regreso para manejar márgenes limpios */
-			.nav-box {
-				margin: 1rem 0 2rem 0;
-			}
+      /* Contenedor del link de regreso para manejar márgenes limpios */
+      .nav-box {
+        margin: 1rem 0 2rem 0;
+      }
 
-			.back-link {
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				color: #009bc3;
-				text-decoration: none;
-				font-weight: 600;
-				transition: color 0.2s;
-				font-size: 0.9rem;
-			}
-			.back-link:hover {
-				color: #70b043;
-			}
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #009bc3;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+        font-size: 0.9rem;
+      }
+      .back-link:hover {
+        color: #70b043;
+      }
 
-			h1 {
-				font-size: 2rem;
-				color: #ffffff;
-				margin: 0;
-				font-weight: 800;
-				letter-spacing: -0.02em;
-				text-align: left;
-			}
+      h1 {
+        font-size: 2rem;
+        color: #ffffff;
+        margin: 0;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-align: left;
+      }
 
-			.exercises-stack {
-				display: flex;
-				flex-direction: column;
-				gap: 2rem;
-			}
+      .exercises-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
 
-			.ex-card {
-				background: #111726;
-				border: 1px solid rgba(255, 255, 255, 0.05);
-				padding: 2.25rem;
-				border-radius: 16px;
-				position: relative;
-				box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
-				overflow: hidden;
-			}
+      .ex-card {
+        background: #111726;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 2.25rem;
+        border-radius: 16px;
+        position: relative;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
 
-			.ex-card::before {
-				content: "";
-				position: absolute;
-				left: 0;
-				top: 0;
-				bottom: 0;
-				width: 5px;
-				background: #70b043;
-			}
+      .ex-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        background: #70b043;
+      }
 
-			.badge-row {
-				display: flex;
-				gap: 8px;
-				margin-bottom: 1rem;
-			}
+      .badge-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+      }
 
-			.badge {
-				padding: 4px 10px;
-				border-radius: 6px;
-				font-size: 0.75rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 0.02em;
-			}
-			.badge-group {
-				background: rgba(0, 155, 195, 0.15);
-				color: #009bc3;
-				border: 1px solid rgba(0, 155, 195, 0.3);
-			}
-			.badge-required {
-				background: rgba(243, 146, 0, 0.15);
-				color: #f39200;
-				border: 1px solid rgba(243, 146, 0, 0.3);
-			}
+      .badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+      .badge-group {
+        background: rgba(0, 155, 195, 0.15);
+        color: #009bc3;
+        border: 1px solid rgba(0, 155, 195, 0.3);
+      }
+      .badge-required {
+        background: rgba(243, 146, 0, 0.15);
+        color: #f39200;
+        border: 1px solid rgba(243, 146, 0, 0.3);
+      }
 
-			h3 {
-				margin: 0 0 1rem 0;
-				font-size: 1.4rem;
-				color: #ffffff;
-				font-weight: 700;
-			}
+      h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.4rem;
+        color: #ffffff;
+        font-weight: 700;
+      }
 
-			.comment-box {
-				background: #070a12;
-				border-left: 3px solid #1e293b;
-				padding: 1rem;
-				border-radius: 0 8px 8px 0;
-				margin: 1rem 0 1.75rem 0;
-			}
-			.comment-box p {
-				margin: 0;
-				color: #94a3b8;
-				font-size: 0.95rem;
-				line-height: 1.5;
-			}
+      .comment-box {
+        background: #070a12;
+        border-left: 3px solid #1e293b;
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 1rem 0 1.75rem 0;
+      }
+      .comment-box p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
 
-			.actions-grid {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 1.25rem;
-			}
+      .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+      }
 
-			.btn-accept {
-				background: #f39200;
-				color: #04060a;
-				font-weight: 700;
-				border: none;
-				padding: 14px;
-				border-radius: 10px;
-				cursor: pointer;
-				font-size: 1rem;
-				transition: all 0.2s ease;
-				box-shadow: 0 4px 12px rgba(243, 146, 0, 0.15);
-			}
-			.btn-accept:not(:disabled):hover {
-				background: #ffaa2b;
-				box-shadow: 0 6px 20px rgba(243, 146, 0, 0.3);
-				transform: translateY(-1px);
-			}
-			.btn-accept:disabled {
-				background: #1e293b;
-				color: #64748b;
-				box-shadow: none;
-				cursor: not-allowed;
-			}
+      .btn-accept {
+        background: #f39200;
+        color: #04060a;
+        font-weight: 700;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(243, 146, 0, 0.15);
+      }
+      .btn-accept:not(:disabled):hover {
+        background: #ffaa2b;
+        box-shadow: 0 6px 20px rgba(243, 146, 0, 0.3);
+        transform: translateY(-1px);
+      }
+      .btn-accept:disabled {
+        background: #1e293b;
+        color: #64748b;
+        box-shadow: none;
+        cursor: not-allowed;
+      }
 
-			.btn-consigna {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				background: transparent;
-				color: #ffffff;
-				border: 2px solid #1e293b;
-				border-radius: 10px;
-				text-decoration: none;
-				font-weight: 600;
-				font-size: 1rem;
-				transition: all 0.2s ease;
-			}
-			.btn-consigna:hover {
-				background: rgba(255, 255, 255, 0.03);
-				border-color: #cbd5e1;
-			}
+      .btn-consigna {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        color: #ffffff;
+        border: 2px solid #1e293b;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+      .btn-consigna:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: #cbd5e1;
+      }
 
-			.user-profile-bar {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				background: #111726;
-				border: 1px solid rgba(255, 255, 255, 0.05);
-				padding: 1rem 1.5rem;
-				border-radius: 12px;
-				margin-top: 1.5rem;
-			}
-			.user-info {
-				display: flex;
-				align-items: center;
-				gap: 0.75rem;
-			}
-			.user-avatar {
-				width: 36px;
-				height: 36px;
-				border-radius: 50%;
-				border: 2px solid #70b043;
-			}
-			.btn-logout {
-				background: transparent;
-				color: #94a3b8;
-				border: 1px solid #1e293b;
-				padding: 6px 12px;
-				border-radius: 6px;
-				cursor: pointer;
-				font-weight: 600;
-				font-size: 0.85rem;
-				transition: all 0.2s;
-			}
-			.btn-logout:hover {
-				color: #f43f5e;
-				border-color: rgba(244, 63, 94, 0.2);
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<HeaderUni>
-				<h1>{title}</h1>
-			</HeaderUni>
+      .user-profile-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #111726;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-top: 1.5rem;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid #70b043;
+      }
+      .btn-logout {
+        background: transparent;
+        color: #94a3b8;
+        border: 1px solid #1e293b;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+      }
+      .btn-logout:hover {
+        color: #f43f5e;
+        border-color: rgba(244, 63, 94, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <HeaderUni>
+        <h1>{title}</h1>
+      </HeaderUni>
 
-			<UserProfile />
+      <UserProfile />
 
-			<div class="nav-box">
-				<a href="/" class="back-link">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="14"
-						height="14"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2.5"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						><line x1="19" y1="12" x2="5" y2="12"></line><polyline
-							points="12 19 5 12 12 5"></polyline></svg
-					>
-					Volver al panel principal
-				</a>
-			</div>
+      <div class="nav-box">
+        <a href="/" class="back-link">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><line x1="19" y1="12" x2="5" y2="12"></line><polyline
+              points="12 19 5 12 12 5"></polyline></svg
+          >
+          Volver al panel principal
+        </a>
+      </div>
 
-			<main class="exercises-stack">
-				{
-					ejercicios &&
-						ejercicios.map((ej: any) => {
-							const partes = ej.urlTemplate
-								? ej.urlTemplate
-										.replace("https://github.com/", "")
-										.split("/")
-								: [];
-							const templateOrg = partes[0] ?? "";
-							const template =
-								(partes[1] ?? "").split("?")[0] ?? "";
-							const repoUrl = ej.urlTemplate
-								? ej.urlTemplate.replace(
-										"https://github.com/",
-										"",
-									)
-								: "";
+      <main class="exercises-stack">
+        {
+          ejercicios &&
+            ejercicios.map((ej: any) => {
+              const partes = ej.urlTemplate
+                ? ej.urlTemplate.replace("https://github.com/", "").split("/")
+                : [];
+              const templateOrg = partes[0] ?? "";
+              const template = (partes[1] ?? "").split("?")[0] ?? "";
+              const repoUrl = ej.urlTemplate
+                ? ej.urlTemplate.replace("https://github.com/", "")
+                : "";
 
-							const destOrg = ej.destOrg || templateOrg;
-							const prefix = ej.prefix || template;
-							const isPrivate =
-								ej.obligatorio || ej.isPrivate
-									? "true"
-									: "false";
+              const destOrg = ej.destOrg || templateOrg;
+              const prefix = ej.prefix || template;
+              const isPrivate =
+                ej.obligatorio || ej.isPrivate ? "true" : "false";
 
-							return (
-								<div class="ex-card">
-									<div class="badge-row">
-										{ej.obligatorio && (
-											<span class="badge badge-required">
-												Obligatorio
-											</span>
-										)}
-										{ej.type === "group" && (
-											<span class="badge badge-group">
-												Grupal
-											</span>
-										)}
-									</div>
+              return (
+                <div class="ex-card">
+                  <div class="badge-row">
+                    {ej.obligatorio && (
+                      <span class="badge badge-required">Obligatorio</span>
+                    )}
+                    {ej.type === "group" && (
+                      <span class="badge badge-group">Grupal</span>
+                    )}
+                  </div>
 
-									<h3>{ej.name}</h3>
+                  <h3>{ej.name}</h3>
 
-									{ej.comentarios &&
-										ej.comentarios.map((c: any) => (
-											<div class="comment-box">
-												<p>{c.name}</p>
-											</div>
-										))}
+                  {ej.comentarios &&
+                    ej.comentarios.map((c: any) => (
+                      <div class="comment-box">
+                        <p>{c.name}</p>
+                      </div>
+                    ))}
 
-									<div class="actions-grid">
-										<button
-											type="button"
-											class="btn-accept aceptar-invitacion"
-											data-template={template}
-											data-template-org={templateOrg}
-											data-template-repo={template}
-											data-dest-org={destOrg}
-											data-prefix={prefix}
-											data-private={isPrivate}
-											data-type={ej.type || "individual"}
-											data-require-totp={
-												ej.requireTOTP
-													? "true"
-													: "false"
-											}
-										>
-											Aceptar asignación
-										</button>
+                  <div class="actions-grid">
+                    <button
+                      type="button"
+                      class="btn-accept aceptar-invitacion"
+                      disabled={ej.asignacion === false}
+                      data-template={template}
+                      data-template-org={templateOrg}
+                      data-template-repo={template}
+                      data-dest-org={destOrg}
+                      data-prefix={prefix}
+                      data-private={isPrivate}
+                      data-type={ej.type || "individual"}
+                      data-require-totp={ej.requireTOTP ? "true" : "false"}
+                    >
+                      {ej.asignacion === false
+                        ? "Asignación no disponible"
+                        : "Aceptar asignación"}
+                    </button>
 
-										<a
-											href={`https://github.com/${repoUrl}`}
-											target="_blank"
-											rel="noreferrer"
-											class="btn-consigna"
-										>
-											Ver Consigna
-										</a>
-									</div>
-								</div>
-							);
-						})
-				}
-			</main>
-		</div>
+                    <a
+                      href={`https://github.com/${repoUrl}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="btn-consigna"
+                    >
+                      Ver Consigna
+                    </a>
+                  </div>
+                </div>
+              );
+            })
+        }
+      </main>
+    </div>
 
-		<ModalesClonador />
-		<ScriptClonador />
+    <ModalesClonador />
+    <ScriptClonador />
 
-		<script is:inline>
-			document.addEventListener("DOMContentLoaded", () => {
-				const authUserBar = document.getElementById("auth-user-bar");
-				const displayUsername =
-					document.getElementById("display-username");
-				const displayAvatar = document.getElementById("display-avatar");
-				const btnLogout = document.getElementById("btn-logout-gh");
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", () => {
+        const authUserBar = document.getElementById("auth-user-bar");
+        const displayUsername = document.getElementById("display-username");
+        const displayAvatar = document.getElementById("display-avatar");
+        const btnLogout = document.getElementById("btn-logout-gh");
 
-				const savedUser = localStorage.getItem("gh_username");
+        const savedUser = localStorage.getItem("gh_username");
 
-				if (!savedUser) {
-					window.location.href = "/";
-					return;
-				}
+        if (!savedUser) {
+          window.location.href = "/";
+          return;
+        }
 
-				// Ojo: asegúrate de que tu componente <UserProfile /> renderice estos elementos con estos IDs específicos.
-				if (displayUsername)
-					displayUsername.textContent = `@${savedUser}`;
-				if (displayAvatar)
-					displayAvatar.src = `https://github.com/${savedUser}.png`;
-				if (authUserBar) authUserBar.style.display = "flex";
+        // Ojo: asegúrate de que tu componente <UserProfile /> renderice estos elementos con estos IDs específicos.
+        if (displayUsername) displayUsername.textContent = `@${savedUser}`;
+        if (displayAvatar)
+          displayAvatar.src = `https://github.com/${savedUser}.png`;
+        if (authUserBar) authUserBar.style.display = "flex";
 
-				btnLogout?.addEventListener("click", () => {
-					localStorage.removeItem("gh_username");
-					localStorage.removeItem("gh_token");
-					window.location.href = "/";
-				});
-			});
-		</script>
-		<Footer />
-	</body>
-</html>
+        btnLogout?.addEventListener("click", () => {
+          localStorage.removeItem("gh_username");
+          localStorage.removeItem("gh_token");
+          window.location.href = "/";
+        });
+      });
+    </script>
+    <Footer />
+  </body>
+</html> -->
