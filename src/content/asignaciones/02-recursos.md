@@ -5,6 +5,12 @@ fechaPublicacion: 2026-09-15
 active: true
 
 recursos:
+  - titulo: "🔗 Enlace de Google Meet"
+    url: "https://meet.google.com/orj-rqzx-sik"
+    description: "Enlace para los encuentros sincrónicos"
+    badge: "meet"
+
+
   - titulo: "📝 Documentación Oficial de Git"
     url: "https://git-scm.com/doc"
     description: "Manual de referencia completo para comandos de Git."
