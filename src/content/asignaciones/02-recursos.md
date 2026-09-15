@@ -1,7 +1,7 @@
 ---
 title: "💡 Recursos para el Taller de GIT y GITHUB"
 description: "🧰 Recursos Taller de Git y GitHub"
-fechaPublicacion: 2026-09-12
+fechaPublicacion: 2026-09-15
 active: true
 
 recursos:

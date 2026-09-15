@@ -11,7 +11,7 @@ En esta sección subiremos los videos de cada encuentro.
 
 ---
 
-## Semana 1 - 12-09-2026: *00 · ¿Por qué Git?  \| 01 · Primer Repositorio*
+## Semana 1 - 15-09-2026: *00 · ¿Por qué Git?  \| 01 · Primer Repositorio*
 
 <iframe 
   src="https://drive.google.com/file/d/1FGp6GRlLuAApzZz-aEkRu4gs5bTW-omu/preview" 
