@@ -14,7 +14,7 @@ En esta sección subiremos los videos de cada encuentro.
 ### Encuentro 1 - 12-09-2026
 
 <iframe 
-  src="https://drive.google.com/file/d/1FGp6GRlLuAApzZz-aEkRu4gs5bTW-omu/view?usp=sharing" 
+  src="https://drive.google.com/file/d/1FGp6GRlLuAApzZz-aEkRu4gs5bTW-omu/preview" 
   width="100%" 
   height="480" 
   allow="autoplay" 
