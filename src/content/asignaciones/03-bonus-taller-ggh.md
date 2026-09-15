@@ -1,11 +1,11 @@
 ---
-title: "Bonus para el Taller de GIT y GITHUB"
+title: "🧾 Bonus para el Taller de GIT y GITHUB"
 description: "Material adicional del Taller de Git y GitHub"
 fechaPublicacion: 2026-09-12
-active: true
+active: false
 
 ejercicios:  
-  - name: "Repositorio con materiales de consuta complementarios"
+  - name: "🗃️ Repositorio con materiales de consuta complementarios"
     urlTemplate: "https://github.com/unahur-ggh-2026c2/Recursos-Git-y-GitHub"
     destOrg: "no-create"
     type: "individual" #group

@@ -172,8 +172,8 @@ declare module 'astro:content' {
   collection: "asignaciones";
   data: any
 } & { render(): Render[".md"] };
-"04-Grabaciones.md": {
-	id: "04-Grabaciones.md";
+"04-grabaciones.md": {
+	id: "04-grabaciones.md";
   slug: "04-grabaciones";
   body: string;
   collection: "asignaciones";
