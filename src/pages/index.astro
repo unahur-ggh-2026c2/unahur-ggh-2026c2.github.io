@@ -9,7 +9,7 @@ const todasLasAsignaciones = await getCollection("asignaciones");
 
 // [CORRECCIÓN] Filtramos para que SOLO pasen las asignaciones que no tengan active: false
 const asignacionesVisibles = todasLasAsignaciones.filter(
-  (asig: { data: { active: boolean; }; }) => asig.data.active !== false,
+  (asig: { data: { active: boolean } }) => asig.data.active !== false,
 );
 
 // Helper para formatear la fecha de publicación en el listado principal
@@ -26,6 +26,8 @@ const formatearFecha = (fecha: string | Date) => {
 
 <html lang="es">
   <head>
+    <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}favicon.png`}/>
+    <!-- <link rel="icon" type="image/png" href="./favicon.png" /> -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Panel de Asignaciones - UNAHUR</title>
@@ -241,9 +243,13 @@ const formatearFecha = (fecha: string | Date) => {
       <header class="header-container">
         <div class="header-title-block">
           <h1>
-            Taller de Control de<span class="celeste"> Versiones con Git y GitHub</span>
+            Taller de Control de<span class="celeste">
+              Versiones con Git y GitHub</span
+            >
           </h1>
-          <h2>Entorno de gestión de repositorios, materiales y entregas de código.</h2>
+          <h2>
+            Entorno de gestión de repositorios, materiales y entregas de código.
+          </h2>
           <h3>Instituto de Tecnología e Ingeniería</h3>
         </div>
 
@@ -321,22 +327,27 @@ const formatearFecha = (fecha: string | Date) => {
           <div class="subjects-grid">
             {
               // [CORRECCIÓN] Usamos el array filtrado 'asignacionesVisibles'
-              asignacionesVisibles.map((asig: { data: { fechaPublicacion: string | Date; title: unknown; }; slug: any; }) => {
-                const fechaPub = formatearFecha(asig.data.fechaPublicacion);
+              asignacionesVisibles.map(
+                (asig: {
+                  data: { fechaPublicacion: string | Date; title: unknown };
+                  slug: any;
+                }) => {
+                  const fechaPub = formatearFecha(asig.data.fechaPublicacion);
 
-                return (
-                  <a href={`/asignaciones/${asig.slug}`} class="subject-card">
-                    <div class="card-body">
-                      <span class="card-title">{asig.data.title}</span>
-                      <span style="color: #70b043;">→</span>
-                    </div>
-                    {/* [NUEVO] Si tiene fecha de publicación, la renderizamos abajo */}
-                    {fechaPub && (
-                      <span class="card-date">Actualizado: {fechaPub}</span>
-                    )}
-                  </a>
-                );
-              })
+                  return (
+                    <a href={`/asignaciones/${asig.slug}`} class="subject-card">
+                      <div class="card-body">
+                        <span class="card-title">{asig.data.title}</span>
+                        <span style="color: #70b043;">→</span>
+                      </div>
+                      {/* [NUEVO] Si tiene fecha de publicación, la renderizamos abajo */}
+                      {fechaPub && (
+                        <span class="card-date">Actualizado: {fechaPub}</span>
+                      )}
+                    </a>
+                  );
+                },
+              )
             }
           </div>
         </div>
@@ -348,7 +359,8 @@ const formatearFecha = (fecha: string | Date) => {
         const CLIENT_ID = "Ov23li9KZdLIlzMpvtbK";
 
         // 🔴 REEMPLAZA ESTA URL CON TU PROXY DE CLOUDFLARE 🔴
-        const PROXY = "https://github-cors-proxy.mauricioenrique-pintos.workers.dev/";
+        const PROXY =
+          "https://github-cors-proxy.mauricioenrique-pintos.workers.dev/";
 
         const authGateZone = document.getElementById("auth-gate-zone");
         const subjectsZone = document.getElementById("subjects-zone");

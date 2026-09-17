@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
-import ModalesClonador from "../../components/ModalesClonador.astro";
-import ScriptClonador from "../../components/ScriptClonador.astro";
-import HeaderUni from "../../components/HeaderUni.astro";
+import ModalesClonador from "@/components/ModalesClonador.astro";
+import ScriptClonador from "@/components/ScriptClonador.astro";
+import HeaderUni from "@/components/HeaderUni.astro";
 import UserProfile from "@/components/UserProfile.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -32,6 +32,12 @@ const { Content } = await render(asig);
 
 <html lang="es">
   <head>
+    <link
+      rel="icon"
+      type="image/png"
+      href={`${import.meta.env.BASE_URL}favicon.png`}
+    />
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} - UNAHUR</title>
@@ -452,4 +458,3 @@ const { Content } = await render(asig);
     <Footer />
   </body>
 </html>
-
