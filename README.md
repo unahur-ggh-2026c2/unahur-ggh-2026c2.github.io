@@ -1,12 +1,13 @@
 # 🏛️ Plataforma de Asignaciones - UNAHUR
 
+![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescriptlogoColor=white) ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white) ![GitHub OAuth](https://img.shields.io/badge/GitHub-OAuth-blue?logo=github) ![Estado](https://img.shields.io/badge/Estado-En_Desarrollo-orange) ![Versión](https://img.shields.io/badge/Versi%C3%B3n-v1.9.0--beta-yellow) ![Licencia](https://img.shields.io/badge/Licencia-MIT-green)
+
+
 Plataforma web dinámica e interactiva desarrollada con **Astro** para la gestión de clases, asignaciones, trabajos prácticos, **grabaciones de encuentros y recursos adicionales** de las materias de la **Universidad Nacional de Hurlingham**.
 
 Cuenta con una interfaz de usuario (*UI/UX*) moderna en modo oscuro, control de acceso seguro mediante autenticación nativa con **GitHub OAuth (Device Flow)** y un panel de **Historial** para revisar ciclos anteriores de forma controlada.
 
 Su arquitectura basada en **Astro Content Collections** permite subir cualquier archivo Markdown (`.md`) para ser interpretado automáticamente. La plataforma no solo gestiona la clonación automática de ejercicios de GitHub, sino que soporta páginas informativas completas, cronogramas, reproductores de video incrustados y fichas de recursos externos.
-
----
 
 ---
 
