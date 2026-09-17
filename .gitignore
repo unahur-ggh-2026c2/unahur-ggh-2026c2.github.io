@@ -24,5 +24,6 @@ yarn-error.log*
 .idea
 
 
-
+*.ps1
+Auditoria*
 solucion-alumno.txt
