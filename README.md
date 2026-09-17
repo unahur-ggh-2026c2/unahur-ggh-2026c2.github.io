@@ -9,6 +9,8 @@ Cuenta con una interfaz de usuario (*UI/UX*) moderna en modo oscuro, control de 
 
 Su arquitectura basada en **Astro Content Collections** permite subir cualquier archivo Markdown (`.md`) para ser interpretado automáticamente. La plataforma no solo gestiona la clonación automática de ejercicios de GitHub, sino que soporta páginas informativas completas, cronogramas, reproductores de video incrustados y fichas de recursos externos.
 
+🌐 **Deploy:** [https://unahur-ggh-2026c2.github.io/](https://unahur-ggh-2026c2.github.io/)
+
 ---
 
 ## 👥 Guía del Usuario Final (Estudiante)
