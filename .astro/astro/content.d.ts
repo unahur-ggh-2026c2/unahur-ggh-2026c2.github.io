@@ -179,6 +179,13 @@ declare module 'astro:content' {
   collection: "asignaciones";
   data: any
 } & { render(): Render[".md"] };
+"08-UpdateRepos.md": {
+	id: "08-UpdateRepos.md";
+  slug: "08-updaterepos";
+  body: string;
+  collection: "asignaciones";
+  data: any
+} & { render(): Render[".md"] };
 "09-template.md": {
 	id: "09-template.md";
   slug: "09-template";
