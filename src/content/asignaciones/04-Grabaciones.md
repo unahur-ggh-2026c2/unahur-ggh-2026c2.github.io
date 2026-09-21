@@ -63,7 +63,6 @@ En esta sección subiremos los videos de cada encuentro.
 
 --- -->
 
-
 <!-- ## Semana 5 - 10-10-2026: *07 · Trabajo Colaborativo*
 
 <iframe 
