@@ -1,7 +1,7 @@
 ---
 title: "📺 Grabaciones"
 description: "Grabaciones de los encuentrso sincrónicos del Taller de Git y GitHub"
-fechaPublicacion: 2026-09-12
+fechaPublicacion: 2026-09-20
 active: true
 ---
 
