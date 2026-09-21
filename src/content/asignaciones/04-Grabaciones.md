@@ -24,7 +24,20 @@ En esta sección subiremos los videos de cada encuentro.
 
 ---
 
-<!-- ### Encuentro 2 - 19-09-2026
+### Encuentro 2 - 19-09-2026
+
+<iframe 
+  src="https://drive.google.com/file/d/12OSglK6aEwlrqKJZdtw2JpufiVdQk0qx/preview" 
+  width="100%" 
+  height="480" 
+  allow="autoplay" 
+  allowfullscreen
+  style="border: 0;">
+</iframe>
+
+---
+
+<!-- ### Encuentro 3 - 26-09-2026
 
 <iframe 
   src="https://drive.google.com/file/d/1NByWVC8C8rZRFaESL1FAm3AY1BfcZpdv/preview" 
@@ -36,3 +49,4 @@ En esta sección subiremos los videos de cada encuentro.
 </iframe>
 
 --- -->
+
