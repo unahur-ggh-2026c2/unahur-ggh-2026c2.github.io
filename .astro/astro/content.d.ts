@@ -165,15 +165,8 @@ declare module 'astro:content' {
   collection: "asignaciones";
   data: any
 } & { render(): Render[".md"] };
-"03-bonus-taller-ggh.md": {
-	id: "03-bonus-taller-ggh.md";
-  slug: "03-bonus-taller-ggh";
-  body: string;
-  collection: "asignaciones";
-  data: any
-} & { render(): Render[".md"] };
-"04-grabaciones.md": {
-	id: "04-grabaciones.md";
+"04-Grabaciones.md": {
+	id: "04-Grabaciones.md";
   slug: "04-grabaciones";
   body: string;
   collection: "asignaciones";
@@ -189,6 +182,13 @@ declare module 'astro:content' {
 "09-template.md": {
 	id: "09-template.md";
   slug: "09-template";
+  body: string;
+  collection: "asignaciones";
+  data: any
+} & { render(): Render[".md"] };
+"10-ReposExternos.md": {
+	id: "10-ReposExternos.md";
+  slug: "10-reposexternos";
   body: string;
   collection: "asignaciones";
   data: any
