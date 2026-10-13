@@ -1,7 +1,7 @@
 ---
 title: "📺 Grabaciones"
 description: "Grabaciones de los encuentrso sincrónicos del Taller de Git y GitHub"
-fechaPublicacion: 2026-09-29
+fechaPublicacion: 2026-10-13
 active: true
 ---
 
@@ -59,10 +59,10 @@ En esta sección subiremos los videos de cada encuentro.
 
 ---
 
-<!-- ## Semana 4 - 03-10-2026: *06 · Ramas*
+## Semana 4 - 03-10-2026: *06 · Ramas*
 
 <iframe
-  src="https://drive.google.com/file/d/1NByWVC8C8rZRFaESL1FAm3AY1BfcZpdv/preview"
+  src="https://drive.google.com/file/d/1SLWdZGErY-v-S86lgEVc-dh1o3cf4WcN/preview"
   width="100%"
   height="480"
   allow="autoplay"
@@ -72,12 +72,12 @@ En esta sección subiremos los videos de cada encuentro.
 </div>
 </br></br></br>
 
---- -->
+---
 
-<!-- ## Semana 5 - 10-10-2026: *07 · Trabajo Colaborativo*
+## Semana 5 - 10-10-2026: *07 · Trabajo Colaborativo*
 
 <iframe
-  src="https://drive.google.com/file/d/1NByWVC8C8rZRFaESL1FAm3AY1BfcZpdv/preview"
+  src="https://drive.google.com/file/d/1Y2lnaB5O5nnLgX5TnfM8CLwmcHg6IXYI/preview"
   width="100%"
   height="480"
   allow="autoplay"
@@ -87,7 +87,7 @@ En esta sección subiremos los videos de cada encuentro.
 </div>
 </br></br></br>
 
---- -->
+---
 
 <!-- ## Semana 6 - 17-10-2026: *08 · Perfil Profesional \| 09 · Proyecto Final*
 
