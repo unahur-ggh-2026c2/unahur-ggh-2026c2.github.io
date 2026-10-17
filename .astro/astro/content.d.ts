@@ -172,6 +172,13 @@ declare module 'astro:content' {
   collection: "asignaciones";
   data: any
 } & { render(): Render[".md"] };
+"07-CleanHistory.md": {
+	id: "07-CleanHistory.md";
+  slug: "07-cleanhistory";
+  body: string;
+  collection: "asignaciones";
+  data: any
+} & { render(): Render[".md"] };
 "08-UpdateRepos.md": {
 	id: "08-UpdateRepos.md";
   slug: "08-updaterepos";
