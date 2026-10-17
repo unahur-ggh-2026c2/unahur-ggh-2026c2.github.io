@@ -108,7 +108,8 @@ git log --all --full-history -- .env
 Aunque los commits ya no se enlacen a tus ramas, GitHub a veces mantiene en caché los commits huérfanos a través de su URL directa temporalmente.
 
 * Intenta acceder a la URL exacta de un commit antiguo conflictivo (por ejemplo: `https://github.com/tu-usuario/tu-repo/commit/HASH_DEL_COMMIT`).
-* Si el archivo sigue apareciendo allí por caché de la plataforma y necesitas removerlo con urgencia extrema por seguridad, debes contactar al [Soporte de GitHub](https://support.github.com) solicitando que fuercen un *"garbage collection"* (recolección de basura) para purgar los commits huérfanos de tu repositorio.
+* Si el archivo sigue apareciendo allí por caché de la plataforma y necesitas removerlo con urgencia extrema por seguridad, debes contactar al <a href="https://support.github.com" target="_blank">Soporte de GitHub</a>
+ solicitando que fuercen un *"garbage collection"* (recolección de basura) para purgar los commits huérfanos de tu repositorio.
 
 ---
 
