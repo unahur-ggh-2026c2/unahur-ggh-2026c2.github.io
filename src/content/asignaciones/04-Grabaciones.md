@@ -1,7 +1,7 @@
 ---
 title: "📺 Grabaciones"
 description: "Grabaciones de los encuentrso sincrónicos del Taller de Git y GitHub"
-fechaPublicacion: 2026-10-13
+fechaPublicacion: 2026-10-18
 active: true
 ---
 
@@ -89,10 +89,10 @@ En esta sección subiremos los videos de cada encuentro.
 
 ---
 
-<!-- ## Semana 6 - 17-10-2026: *08 · Perfil Profesional \| 09 · Proyecto Final*
+## Semana 6 - 17-10-2026: *08 · Perfil Profesional \| 09 · Proyecto Final*
 
 <iframe
-  src="https://drive.google.com/file/d/1NByWVC8C8rZRFaESL1FAm3AY1BfcZpdv/preview"
+  src="https://drive.google.com/file/d/12FxcukM5I2_Fbyw6fXAD6OzufV5ZEqKr/preview"
   width="100%"
   height="480"
   allow="autoplay"
@@ -102,4 +102,4 @@ En esta sección subiremos los videos de cada encuentro.
 </div>
 </br></br></br>
 
---- -->
+---
